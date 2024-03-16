@@ -1,23 +1,38 @@
+'use client'
+
 import { auth } from "@clerk/nextjs"
 import { redirect } from "next/navigation";
 import { CheckCircle, Clock } from "lucide-react";
-
+// import { useRouter } from "next/router";
 import { getDashboardCourses } from "@/actions/get-dashboard-courses";
 import { CoursesList } from "@/components/courses-list";
 
 import { InfoCard } from "./_components/info-card";
+import { useState,useEffect } from "react";
 
 export default async function Dashboard() {
-  const { userId } = auth();
+  const [completedCourses, setCompletedCourses] = useState([]);
+  const [coursesInProgress, setCoursesInProgress] = useState([]);
 
-  if (!userId) {
-    return redirect("/");
-  }
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { userId } = await auth();
+        if (!userId) {
+          redirect("/");
+          return;
+        }
 
-  const {
-    completedCourses,
-    coursesInProgress
-  } = await getDashboardCourses(userId);
+        const { completedCourses, coursesInProgress } = await getDashboardCourses(userId);
+        setCompletedCourses(completedCourses);
+        setCoursesInProgress(coursesInProgress);
+      } catch (error) {
+        console.error("Error fetching dashboard data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className="p-6 space-y-4">
