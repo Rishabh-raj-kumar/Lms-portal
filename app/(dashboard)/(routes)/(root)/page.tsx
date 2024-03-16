@@ -11,7 +11,7 @@ export default async function Dashboard() {
   const { userId } = auth();
 
   if (!userId) {
-    return redirect("/sign-in");
+    return redirect("https://tourmaline-speculoos-0a0897.netlify.app/");
   }
 
   const {
