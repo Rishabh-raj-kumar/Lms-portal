@@ -38,10 +38,10 @@ export const Chart = ({
             axisLine={false}
             tickFormatter={(value: any) => `$${value}`}
           />
-          <Bar
+          {/* <Bar
             dataKey="total"
             fill="#0369a1"
-          />
+          /> */}
         </BarChart>
       </ResponsiveContainer>
     </Card>
