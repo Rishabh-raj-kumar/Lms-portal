@@ -10,5 +10,8 @@ const nextConfig = {
       // your project has ESLint errors.
       ignoreDuringBuilds: true,
     },
+    "scripts": {
+      "postinstall": "prisma generate"
+    }
   }
 export default nextConfig;
