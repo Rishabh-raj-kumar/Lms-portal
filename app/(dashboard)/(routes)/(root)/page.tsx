@@ -9,14 +9,21 @@ import { CoursesList } from "@/components/courses-list";
 
 import { InfoCard } from "./_components/info-card";
 import { useEffect } from "react";
+import { string } from "zod";
 
-export default async function Dashboard() {
+export function getServerSideProps() { 
   const { userId } = auth();
-  const router = useRouter()
+  return 
+    {props : userId}
+}
 
-  if (userId === null) {
-    return router.push("/");
-  }
+export default async function Dashboard({userId}:any) {
+  // const { userId } = auth();
+  // const router = useRouter()
+
+  // if (userId === null) {
+  //   return router.push("/");
+  // }
 
 
   const {
