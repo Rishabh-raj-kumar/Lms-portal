@@ -1,29 +1,21 @@
-'use client'
-
 import { auth } from "@clerk/nextjs"
-import { useRouter } from "next/router";
+// import { useRouter,redirect } from "next/navigation";
 import { CheckCircle, Clock } from "lucide-react";
-
+import { useRouter } from "next/navigation";
 import { getDashboardCourses } from "@/actions/get-dashboard-courses";
 import { CoursesList } from "@/components/courses-list";
 
 import { InfoCard } from "./_components/info-card";
 import { useEffect } from "react";
-import { string } from "zod";
 
-export function getServerSideProps() { 
+export default async function Dashboard() {
   const { userId } = auth();
-  return 
-    {props : userId}
-}
+  const router = useRouter()
 
-export default async function Dashboard({userId}:any) {
-  // const { userId } = auth();
-  // const router = useRouter()
-
-  // if (userId === null) {
-  //   return router.push("/");
-  // }
+  if (!userId) {
+    router.push("/"); // Using useRouter for redirect
+    return null; // Add a return statement here to prevent further execution of the function
+  }
 
 
   const {

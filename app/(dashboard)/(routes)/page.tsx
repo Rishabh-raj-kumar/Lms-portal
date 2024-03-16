@@ -1,7 +1,5 @@
-'use client'
-
 import { auth } from "@clerk/nextjs"
-import { useRouter } from "next/router";
+import { redirect } from "next/navigation";
 import { CheckCircle, Clock } from "lucide-react";
 
 import { getDashboardCourses } from "@/actions/get-dashboard-courses";
@@ -12,10 +10,8 @@ import { InfoCard } from "./(root)/_components/info-card";
 export default async function Dashboard() {
   const { userId } = auth();
 
-  const router = useRouter()
-
-  if (userId === null) {
-    return router.push("/");
+  if (!userId) {
+    return redirect("/");
   }
 
   const {
