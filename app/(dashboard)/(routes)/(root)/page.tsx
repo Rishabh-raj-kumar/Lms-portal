@@ -14,7 +14,7 @@ export default async function Dashboard() {
   const { userId } = auth();
   const router = useRouter()
 
-  if (!userId) {
+  if (userId === null) {
     return router.push("/");
   }
 
