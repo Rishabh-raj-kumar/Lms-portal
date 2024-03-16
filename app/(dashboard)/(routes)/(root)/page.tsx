@@ -13,7 +13,7 @@ export default async function Dashboard() {
   const router = useRouter()
 
   if (!userId) {
-    router.push("/"); // Using useRouter for redirect
+    router.push("/sign-in"); // Using useRouter for redirect
     return null; // Add a return statement here to prevent further execution of the function
   }
 
