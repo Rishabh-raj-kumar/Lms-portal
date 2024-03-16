@@ -1,7 +1,7 @@
 'use client'
 
 import { auth } from "@clerk/nextjs"
-import { useRouter,redirect } from "next/navigation";
+import { useRouter } from "next/router";
 import { CheckCircle, Clock } from "lucide-react";
 
 import { getDashboardCourses } from "@/actions/get-dashboard-courses";
