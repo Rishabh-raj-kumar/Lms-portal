@@ -34,6 +34,7 @@ export async function DELETE(
         courseId: params.courseId,
       }
     });
+    // console.log("hiii")
 
     if (!chapter) {
       return new NextResponse("Not Found", { status: 404 });
