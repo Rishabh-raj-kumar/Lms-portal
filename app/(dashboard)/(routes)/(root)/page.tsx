@@ -1,38 +1,73 @@
-import { auth } from "@clerk/nextjs"
-import { redirect } from "next/navigation";
-import { CheckCircle, Clock } from "lucide-react";
+'use client'
 
-import { getDashboardCourses } from "@/actions/get-dashboard-courses";
-import { CoursesList } from "@/components/courses-list";
+import { useAuth } from "@clerk/clerk-react"
+import { useRouter } from "next/navigation"
+import { CheckCircle, Clock } from "lucide-react"
+import { useState, useEffect } from 'react'
 
-import { InfoCard } from "./_components/info-card";
+import { CoursesList } from "@/components/courses-list"
+import { InfoCard } from "./_components/info-card"
 
-export default async function Dashboard() {
-  const { userId } = auth();
+export default function Dashboard() {
+  const { userId, isLoaded, isSignedIn, getToken, signOut } = useAuth()
+  const router = useRouter()
 
-  if (!userId) {
-    return redirect("/");
+  const [coursesData, setCoursesData] = useState(null)
+  const [completedCourses, setCompletedCourses] = useState([])
+  const [coursesInProgress, setCoursesInProgress] = useState([])
+
+  const fetcher = async (url: any) => {
+    try {
+      const res = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      })
+
+      if (!res.ok) {
+        throw new Error(res.statusText)
+      }
+
+      return res.json()
+    } catch (error) {
+      console.error('An error occurred while fetching the data: ', error)
+    }
   }
 
-  const {
-    completedCourses,
-    coursesInProgress
-  } = await getDashboardCourses(userId);
+  useEffect(() => {
+    if (isLoaded && isSignedIn && userId) {
+      const coursesUrl = `/api/courses?user_id=${userId}`
+      fetcher(coursesUrl)
+        .then((data) => {
+          setCoursesData(data)
+          setCompletedCourses(data.completedCourses)
+          setCoursesInProgress(data.coursesInProgress)
+        })
+    }
+  }, [isLoaded, isSignedIn, userId, getToken])
+
+  if (!isLoaded || !isSignedIn) {
+    return <div>Loading...</div>
+  }
+
+  if (!userId) {
+    return router.push("/")
+  }
 
   return (
     <div className="p-6 space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-       <InfoCard
+        <InfoCard
           icon={Clock}
           label="In Progress"
           numberOfItems={coursesInProgress.length}
-       />
-       <InfoCard
+        />
+        <InfoCard
           icon={CheckCircle}
           label="Completed"
           numberOfItems={completedCourses.length}
           variant="success"
-       />
+        />
       </div>
       <CoursesList
         items={[...coursesInProgress, ...completedCourses]}
